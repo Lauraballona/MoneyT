@@ -1,0 +1,122 @@
+<div class="row">
+<div class="col-sm-8"><h2>Lista de transacciones</h2></div>
+<div class="col-sm-4">
+	<a href="<?php echo APP_URL.'usuarios'; ?>">
+		<button class="btn btn-sm btn-primary">
+			<span class="glyphicon glyphicon-plus"></span> Lista de cuentas
+</button>
+</a>
+
+  	<a href="<?php echo APP_URL.'categorias'; ?>">
+		<button class="btn btn-sm btn-primary">
+			<span class="glyphicon glyphicon-plus"></span> Lista de categorias
+		</button>
+</a>
+
+	<a href="<?php echo APP_URL.'transacciones/agregar'; ?>">
+		<button class="btn btn-sm btn-primary">
+			<span class="fa fa-plus"></span> Transaccion
+</button>
+</a>
+</div>
+</div>
+	</div>
+
+	<div class="table-responsive">
+	<table class="table">
+		<tr>
+			<th>ID</th>
+			<th>Fecha</th>
+			<th>Categoria</th>
+			<th>Cantidad</th>
+			<th>Accion</th>
+</tr>
+		<?php 
+		$ingresos = 0;
+		$egresos = 0; 
+		$Total = 0;
+		 ?>
+
+	<?php foreach ($this->transacciones as $transaccion): ?>
+		<tr>
+		<td><?php  echo $transaccion["transacciones"]["id"];?></td>
+		<td><?php 
+		$date = date_create($transaccion["transacciones"]["fecha"]);echo date_format($date,'d/m/y' );
+?></td>
+
+		<td><?php  echo $transaccion['categorias']["nombre"];?></td>
+		<?php if ($transaccion["transacciones"]["estado"]==1): ?>
+		<td><p class="text-success">
+		<?php  echo "$".$transaccion["transacciones"]["cantidad"]; $ingresos+=$transaccion["transacciones"]["cantidad"];
+?>
+</p></td>
+
+		<?php endif ?>
+		<?php if ($transaccion["transacciones"]["estado"]==0): ?>
+         <td><p class="text-danger">-
+		<?php  echo "$".$transaccion["transacciones"]["cantidad"];$egresos+=$transaccion["transacciones"]["cantidad"];
+?>
+</p></td>
+
+		<?php endif ?>
+		<td>
+		<a href="<?php  echo APP_URL.'transacciones/editar/'.$transaccion["transacciones"]["id"]; ?>">
+		<button class="btn btn-sm btn-primary">
+		<span class="fa fa-paint-brush"></span> Editar
+</button>
+</a>
+
+		<a href="<?php  echo APP_URL.'transacciones/Eliminar/'.$transaccion["transacciones"]["id"]; ?>">
+		<button class="btn btn-sm btn-primary">
+		<span class="fa fa-trash"></span> Eliminar
+
+</button>
+</a>
+		<?php
+		if ($transaccion["transacciones"]["estado"]==1) {?>
+		<a href="<?php echo APP_URL."transacciones/cambiarEstado/".$transaccion["transacciones"]["id"]."/".$transaccion["transacciones"]["estado"];?>">
+		<button class="btn btn-sm btn-primary">
+		<span class="fa fa-share"></span> Egresar
+
+</button>
+</a>
+
+	<?php } 
+		 elseif ($transaccion["transacciones"]["estado"]==0) {?>
+		 <a href="<?php echo APP_URL."transacciones/cambiarEstado/".$transaccion["transacciones"]["id"]."/".$transaccion["transacciones"]["estado"];?>">
+	     <button class="btn btn-sm btn-primary">
+			<span class="fa fa-reply"></span> Ingresar
+ </button>
+</a>
+	<?php
+	}
+	 ?>
+</td>
+</tr>
+
+	<?php endforeach ?>
+	<tfoot>
+	<tr>
+	<td colspan="3" class="text-left">Total de ingresos:  $</td>
+	<td><?php echo number_format($ingresos,2); ?>
+
+	</td>
+	<td></td>
+</tr>
+<tr>
+
+	<td colspan="3" class="text-left">Total de egresos:  $</td>
+	<td><?php echo number_format($egresos,2); ?></td>
+
+<td></td>
+</tr>
+<tr>
+
+	<td colspan="3" class="text-left">Balance: $</td>
+	<td><?php echo number_format(($ingresos-$egresos),2);  ?></td>
+
+<td></td>
+</tr>
+</tfoot>
+</table>
+ </div>
